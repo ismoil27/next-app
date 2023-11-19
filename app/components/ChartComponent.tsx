@@ -1,6 +1,5 @@
-// components/ChartComponent.tsx
-import React, { useEffect, useRef } from "react";
-import Chart, { ChartConfiguration } from "chart.js/auto";
+import { useEffect, useRef } from "react";
+import Chart from "chart.js/auto";
 import parseCSVData from "../utils/parseData";
 
 interface MyData {
@@ -9,53 +8,55 @@ interface MyData {
 }
 
 const ChartComponent = () => {
-  const chartRef = useRef<HTMLCanvasElement>(null);
-  const chartInstance = useRef<Chart>();
+  const chartRef = useRef<HTMLCanvasElement | null>(null);
+  const chartInstance = useRef<Chart | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const rawData = await parseCSVData();
-      const data: MyData[] = rawData.map((item: any) => ({
-        label: item.label as string,
-        value: Number(item.value),
-      }));
+      try {
+        const rawData = await parseCSVData();
+        const data = rawData.filter((item) => item.label && !isNaN(item.value));
 
-      if (chartRef.current && data.length > 0) {
-        const ctx = chartRef.current.getContext("2d");
-        if (ctx) {
+        if (chartRef.current && data.length > 0) {
           if (chartInstance.current) {
             chartInstance.current.destroy();
           }
-          chartInstance.current = new Chart(ctx, {
-            type: "bar",
-            data: {
-              labels: data.map((item) => item.label),
-              datasets: [
-                {
-                  label: "Data Label",
-                  data: data.map((item) => item.value),
-                  backgroundColor: "rgba(54, 162, 235, 0.2)",
-                  borderColor: "rgba(54, 162, 235, 1)",
-                  borderWidth: 1,
-                },
-              ],
-            },
-            options: {
-              // Chart options
-            },
-          });
+
+          const ctx = chartRef.current.getContext("2d");
+          if (ctx) {
+            chartInstance.current = new Chart(ctx, {
+              type: "bar",
+              data: {
+                labels: data.map((item) => item.label),
+                datasets: [
+                  {
+                    label: "Data Label",
+                    data: data.map((item) => item.value),
+                    backgroundColor: "rgba(54, 162, 235, 0.2)",
+                    borderColor: "rgba(54, 162, 235, 1)",
+                    borderWidth: 1,
+                  },
+                ],
+              },
+              options: {
+                // Chart options
+              },
+            });
+          } else {
+            console.error("Canvas context not available.");
+          }
         } else {
-          console.error("Context not available.");
+          console.error("Chart canvas or data unavailable.");
         }
-      } else {
-        console.error("Chart canvas or data unavailable.");
+      } catch (error) {
+        console.error("Error fetching or processing data:", error);
       }
     };
 
     fetchData();
   }, []);
 
-  return <canvas ref={chartRef}></canvas>;
+  return <canvas ref={chartRef} width="400" height="400"></canvas>;
 };
 
 export default ChartComponent;
