@@ -1,9 +1,7 @@
-import IndexPage from "./pages";
-
 export default function Home() {
   return (
     <main>
-      <IndexPage />
+      <h2>Dashboard</h2>
     </main>
   );
 }
