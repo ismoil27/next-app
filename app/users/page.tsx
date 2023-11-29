@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
 import getAllUsers from "@/lib/getAllUsers";
+import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadate: Metadata = {
+export const metadata: Metadata = {
   title: "Users",
 };
 
