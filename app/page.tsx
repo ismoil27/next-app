@@ -1,14 +1,15 @@
-import Link from "next/link";
+"use client";
 
-function Home() {
+import Home from "./components/home";
+import Navbar from "./components/navbar";
+
+function HomePage() {
   return (
-    <main>
-      <h1>Home Page</h1>
-      <p>
-        <Link href={"/users"}>Users</Link>
-      </p>
-    </main>
+    <div>
+      <Navbar />
+      <Home />
+    </div>
   );
 }
 
-export default Home;
+export default HomePage;
