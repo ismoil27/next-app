@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { PostType } from "../interface";
+import Text from "./text/text";
 
 const Home = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
@@ -25,17 +26,9 @@ const Home = () => {
   }, []);
   return (
     <>
-      {isLoading
-        ? "Loading..."
-        : posts.map((post) => {
-            return (
-              <div key={post.id}>
-                <Link href={`/posts/${post.id}`}>{post.title}</Link>
-              </div>
-            );
-          })}
+      <h2>Welcone Home</h2>
 
-      <div>Home</div>
+      <Text text="Home Page" />
     </>
   );
 };
